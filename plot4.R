@@ -26,7 +26,7 @@ png("plot4.png", bg="transparent")
 
 par(mfcol=c(2, 2))
 # Plot the lines plot of the Global Active Power measured by minutes during the day
-with(studiedSet, plot(DateTime, Global_active_power, type="l", ylab="Global Active Power (kilowatts)", xlab=""))
+with(studiedSet, plot(DateTime, Global_active_power, type="l", ylab="Global Active Power", xlab=""))
 
 # Plot submetering
 ylim=range(c(studiedSet$Sub_metering_1, studiedSet$Sub_metering_2, studiedSet$Sub_metering_3))
