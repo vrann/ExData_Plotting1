@@ -14,24 +14,34 @@ studiedSet = subset(householdPowerConsumption, as.Date(Date, "%d/%m/%Y") >= as.D
 studiedSet$DateTime = strptime(paste(studiedSet$Date, studiedSet$Time, " "), format("%d/%m/%Y %H:%M:%S "))
 
 # Convert values to doubles
+studiedSet$Global_active_power = as.double(studiedSet$Global_active_power)
 studiedSet$Sub_metering_1 = as.double(studiedSet$Sub_metering_1)
 studiedSet$Sub_metering_2 = as.double(studiedSet$Sub_metering_2)
 studiedSet$Sub_metering_3 = as.double(studiedSet$Sub_metering_3)
+studiedSet$Voltage = as.double(studiedSet$Voltage)
+studiedSet$Global_reactive_power = as.double(studiedSet$Global_reactive_power)
 
 # Use PNG graphic device
-png("plot3.png", bg="transparent")
+png("plot4.png", bg="transparent")
 
-# define scale for y axes
+par(mfcol=c(2, 2))
+# Plot the lines plot of the Global Active Power measured by minutes during the day
+with(studiedSet, plot(DateTime, Global_active_power, type="l", ylab="Global Active Power (kilowatts)", xlab=""))
+
+# Plot submetering
 ylim=range(c(studiedSet$Sub_metering_1, studiedSet$Sub_metering_2, studiedSet$Sub_metering_3))
-
-# plot 3 diagrams one by one, par(new=T) makes it use same canvas
 with(studiedSet, plot(DateTime, Sub_metering_1, type="l", ylab="Energy sub metering", xlab="", ylim=ylim))
 par(new=T)
 with(studiedSet, plot(DateTime, Sub_metering_2, type="l", ylab="", xlab="", ylim=ylim, col="red", axes=F))
 par(new=T)
 with(studiedSet, plot(DateTime, Sub_metering_3, type="l", ylab="", xlab="", ylim=ylim, col="blue", axes=F))
+legend("topright", bty="n", legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lwd=1, col=c("black", "red", "blue"))
 
-#add a legend
-legend("topright", legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lwd=1, col=c("black", "red", "blue"))
+# Plot voltage
+with(studiedSet, plot(DateTime, Voltage, type="l", ylab="Voltage", xlab="datetime", yaxt='n', frame.plot = TRUE))
+axis(side=2, at=seq(234, 246, by=4))
+
+# Plot Global Reactive power
+with(studiedSet, plot(DateTime, Global_reactive_power, type="l", xlab="datetime"))
 
 dev.off()
